@@ -3,10 +3,24 @@
     "name": "My Extension",
     "version": "0.1",
     "description": "tinker with browsing experience",
+    "web_accessible_resources": [
+        "audio/punch1.mp3",
+        "audio/punch2.mp3",
+        "audio/punch3.mp3",
+        "audio/punch4.mp3",
+        "audio/swoosh1.mp3",
+        "audio/swoosh2.mp3",
+        "img/pow.png",
+        "img/thwack.png",
+        "img/swoosh1.png",
+        "img/swoosh2.png",
+        "img/swoosh3.png"
+        ],
     "content_scripts": [
         {
             "matches" : ["<all_urls>"],
             "js": [
+                "jquery-3.2.1.min.js",
                 "mouse.js",
                 "resize.js"
                 ],
