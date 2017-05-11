@@ -4,6 +4,45 @@ var lastMouseY = null;
 var lastSpeedX = null;
 var lastSpeedY = null;
 
+
+var checkScrollAccl = (function(settings){
+    settings = settings || {};
+
+    var lastPos, newPos, lastSpeed, newSpeed, timer, delta,
+        delay = settings.delay || 50; // in "ms" (higher means lower fidelity )
+
+    function clear() {
+      lastPos = null;
+      lastSpeed = 0;
+      delta = 0;
+    }
+
+    clear();
+
+    return function(){
+      newPos = window.scrollY;
+      if ( lastPos != null ){ // && newPos < maxScroll
+        delta = newPos -  lastPos;
+      }
+      newSpeed = delta;
+      delta = newSpeed - lastSpeed;
+      lastSpeed = newSpeed;
+      lastPos = newPos;
+      clearTimeout(timer);
+      timer = setTimeout(clear, delay);
+      return delta;
+    };
+})();
+
+// listen to "scroll" event
+window.onscroll = function(){
+  var accl = checkScrollAccl();
+  var threshold = 100;
+  if (Math.abs(accl) > threshold) {
+      playSwoosh();
+  }
+};
+
 document.addEventListener("mousemove", function(e) {
     if (timestamp === null) {
         timestamp = Date.now();
@@ -22,7 +61,7 @@ document.addEventListener("mousemove", function(e) {
     var threshold = 500;
 
     //console.log("Mouse speed (" + speedX + "," + speedY + ")");
-    if ((Math.abs(speedX) > threshold && Math.abs(lastSpeedX) < 40) 
+    if ((Math.abs(speedX) > threshold && Math.abs(lastSpeedX) < 40)
     || (Math.abs(speedY) > threshold) && Math.abs(lastSpeedY) < 40) {
         playSwoosh();
         showSwoosh(e, speedX, speedY);
@@ -59,7 +98,7 @@ function playPunch() {
     var path = choose(paths);
     var myAudio = new Audio();        // create the audio object
     myAudio.src = chrome.runtime.getURL(path); // assign the audio file to its src
-    myAudio.play(); 
+    myAudio.play();
 }
 
 function playSwoosh() {
@@ -70,7 +109,7 @@ function playSwoosh() {
     var path = choose(paths);
     var myAudio = new Audio();        // create the audio object
     myAudio.src = chrome.runtime.getURL(path); // assign the audio file to its src
-    myAudio.play(); 
+    myAudio.play();
 }
 
 function showPunch(e) {
@@ -78,17 +117,27 @@ function showPunch(e) {
     var y = e.pageY + 'px';
     var paths = [
         "img/pow.png",
-        "img/thwack.png"
+        "img/thwack.png",
+        "img/wham.png",
+        "img/bang.png"
     ];
     var path = choose(paths);
     var img = document.createElement("IMG");
     img.src = chrome.extension.getURL(path);
     img.style.width = '50%';
-    img.style.height = 'auto';
-    var div = $("<div class='aaa'>").css({
-        "position": "absolute",                    
+    img.style.height = '50%';
+    img.style.zindex = 99999;
+    img.setAttribute("unselectable","on");
+    var div = $("<div class='aaa' unselectable='on'>").css({
+        "position": "absolute",
         "left": x,
-        "top": y
+        "top": y,
+        "-moz-user-select": "-moz-none",
+        "-khtml-user-select": "none",
+        "-webkit-user-select": "none",
+        "-ms-user-select": "none",
+        "user-select": "none",
+        "z-index":9999
     });
 
     div.append(img);
@@ -119,19 +168,24 @@ function showSwoosh(e, speedX, speedY) {
     var x = e.screenX + dx +  'px';
     var y = e.screenY + dy + 'px';
     var paths = [
-        "img/swoosh1.png",
-        "img/swoosh2.png",
-        "img/swoosh3.png"
+        "img/swoosh.png"
     ];
     var path = choose(paths);
     var img = document.createElement("IMG");
     img.src = chrome.extension.getURL(path);
     img.style.width = '50%';
     img.style.height = 'auto';
+    img.style.zindex = 99999;
     var div = $("<div class='aaa'>").css({
-        "position": "absolute",                    
+        "position": "absolute",
         "left": x,
-        "top": y
+        "top": y,
+        "-moz-user-select": "-moz-none",
+        "-khtml-user-select": "none",
+        "-webkit-user-select": "none",
+        "-ms-user-select": "none",
+        "user-select": "none",
+        "z-index":9999
     });
 
     div.append(img);

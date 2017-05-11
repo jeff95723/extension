@@ -12,9 +12,9 @@
         "audio/swoosh2.mp3",
         "img/pow.png",
         "img/thwack.png",
-        "img/swoosh1.png",
-        "img/swoosh2.png",
-        "img/swoosh3.png"
+        "img/bang.png",
+        "img/wham.png",
+        "img/swoosh.png"
         ],
     "content_scripts": [
         {
